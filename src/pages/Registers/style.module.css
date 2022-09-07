@@ -1,0 +1,10 @@
+.container__group {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 5px;
+  padding: 10px;
+}
+
+.container {
+  margin-top: 20px;
+}
