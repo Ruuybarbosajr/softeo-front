@@ -14,7 +14,7 @@ import getServicesProvidedByMonth from '../../services/getServicesProvidedByMont
 import getServicesProvidedByPeriod from '../../services/getServicesProvidedByPeriod';
 import { Modal } from 'react-bootstrap';
 import configPrice from '../../Helpers/configPrice';
-import getServiceProvided from '../../services/getServiceProvided';
+import getServiceProvided from '../../services/getOneServiceProvided';
 import TotalPrice from '../../components/TotalPrice';
 
 export default function Home() {

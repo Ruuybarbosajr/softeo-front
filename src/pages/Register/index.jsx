@@ -10,19 +10,21 @@ import NewServiceProvidedContext from '../../context/NewServiceProvidedContext';
 
 export default function Registers() {
   const navigate = useNavigate();
-  const { setServiceProvidedForConfirmation } = useContext(NewServiceProvidedContext);
+  const {
+    setServiceProvidedForConfirmation,
+    serviceProvidedForConfirmation
+  } = useContext(NewServiceProvidedContext);
+
   const [clients, setClients] = useState([]);
   const [services, setServices] = useState([]); 
-  const [newServiceProvided, setNewServiceProvided] = useState({
-    clientId: '',
-    serviceId: '',
-    installmentsPaid: 1,
-    service: {
-      maxInstallments: 1,
-      price: 0
-    },
-    installmentsContracted: 0
-  });
+
+  const [btnDisabled, setBtnDisabled] = useState(true);
+
+  useEffect(() => {
+    if (serviceProvidedForConfirmation.clientId && serviceProvidedForConfirmation.serviceId) {
+      setBtnDisabled(false);
+    }
+  }, [serviceProvidedForConfirmation]);
 
   useEffect(() => {
     (async () => {
@@ -31,18 +33,30 @@ export default function Registers() {
     })();
   }, []);
 
-  function handleChange({ target: { value } }) {
+  function handleChangeService({ target: { value } }) {
+    if (!value) return;
     const service = services.find(({ id }) => id === value);
 
-    setNewServiceProvided((prev) => ({
+    setServiceProvidedForConfirmation((prev) => ({
       ...prev,
       service,
       serviceId: service.id
     }));
   }
 
+  function handleChangeClient({ target: { value } }) {
+    if (!value) return;
+    const client = clients.find(({ id }) => id === value);
+
+    setServiceProvidedForConfirmation((prev) => ({
+      ...prev,
+      clientId: value,
+      client
+    }));
+  }
+
   function confirmationServiceProvided() {
-    setServiceProvidedForConfirmation(newServiceProvided);
+    setServiceProvidedForConfirmation(serviceProvidedForConfirmation);
     navigate('/confirm-service');
   }
 
@@ -57,12 +71,9 @@ export default function Registers() {
                 <Form.Select
                   aria-label="Selecione o cliente"
                   placeholder="cliente"
-                  onChange={ ({ target }) => setNewServiceProvided((prev) => ({
-                    ...prev,
-                    clientId: target.value
-                  })) }
+                  onChange={ handleChangeClient }
                 >
-                  <option>Selecione o cliente</option>
+                  <option value="" >Selecione o cliente</option>
                   { clients.map((client) => (
                     <option
                       key={client.id}
@@ -86,9 +97,9 @@ export default function Registers() {
                 <Form.Select
                   aria-label="Selecione o cliente"
                   placeholder="Mês"
-                  onChange={ handleChange }
+                  onChange={ handleChangeService }
                 >
-                  <option>Selecione o serviço</option>
+                  <option value="" >Selecione o serviço</option>
                   { services.map((service) => (
                     <option
                       key={service.id}
@@ -112,19 +123,19 @@ export default function Registers() {
                 <Form.Select
                   aria-label="Selecione o cliente"
                   placeholder="Mês"
-                  disabled={ !newServiceProvided.service.price }
-                  onChange={ ({ target }) =>  setNewServiceProvided((prev) => ({
+                  disabled={ !serviceProvidedForConfirmation.service.price }
+                  onChange={ ({ target }) =>  setServiceProvidedForConfirmation((prev) => ({
                     ...prev,
                     installmentsContracted: Number(target.value)
                   }))}
                 >
-                  { !newServiceProvided.service.price && <option>Nº de parcelas</option> }
-                  { Array.from({ length: newServiceProvided.service.maxInstallments }).map((_, index) => (
+                  { !serviceProvidedForConfirmation.service.price && <option>Nº de parcelas</option> }
+                  { Array.from({ length: serviceProvidedForConfirmation.service.maxInstallments }).map((_, index) => (
                     <option
                       key={index}
                       value={index + 1}
                     >
-                      {configInstallments(newServiceProvided.service.price, index + 1)}
+                      {configInstallments(serviceProvidedForConfirmation.service.price, index + 1)}
                     </option>
                   ) )}
                 </Form.Select>
@@ -132,10 +143,11 @@ export default function Registers() {
             </Col>
           </Row>
           <Button
+            disabled={btnDisabled}
             variant="primary"
             onClick={ confirmationServiceProvided }
           >
-            Confirmar
+            Confirmar Serviço
           </Button>
         </Form>
       </Container>
