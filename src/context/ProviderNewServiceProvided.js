@@ -24,5 +24,5 @@ export default function ProviderNewServiceProvided({ children }) {
 }
 
 ProviderNewServiceProvided.propTypes = {
-  children: PropTypes.elementType
+  children: PropTypes.element.isRequired
 };

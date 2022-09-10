@@ -28,8 +28,13 @@ export default function Registers() {
 
   useEffect(() => {
     (async () => {
-      setClients((await getClients()).data);
-      setServices((await getServices()).data);
+      try {
+        setClients((await getClients()).data);
+        setServices((await getServices()).data);
+      } catch (error) {
+        console.error(error);
+      }
+
     })();
   }, []);
 
@@ -84,6 +89,7 @@ export default function Registers() {
                   ) )}
                 </Form.Select>
                 <Button
+                  onClick={ () => navigate('/register/client') }
                   variant="primary"
                 >
                   Adicionar
@@ -110,6 +116,7 @@ export default function Registers() {
                   ) )}
                 </Form.Select>
                 <Button
+                  onClick={ () => navigate('/register/service') }
                   variant="primary"
                 >
                   Adicionar

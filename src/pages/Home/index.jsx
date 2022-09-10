@@ -30,28 +30,51 @@ export default function Home() {
     },
     service: {
       price: 0
-    }
+    },
+    installment: {
+      priceInstallment: 0
+    },
+    numberInstallment: 1
   });
 
   useEffect(() => {
     (async () => {
-      setServicesProvided((await getServicesProvided()).data);
+      try {
+        setServicesProvided((await getServicesProvided()).data);
+      } catch (error) {
+        console.error(error);
+      }
     })();
   }, []);
 
   async function handleClick() {
-    if (!inputChecked) {
-      setServicesProvided((await getServicesProvidedByMonth(month))?.data);
-    } else {
-      const initial = new Date(period.initial).toISOString();
-      const final = new Date(period.final).toISOString();
-      setServicesProvided((await getServicesProvidedByPeriod(initial, final))?.data);
+    try {
+      if (!inputChecked) {
+        setServicesProvided((await getServicesProvidedByMonth(month))?.data);
+      } else {
+        const initial = new Date(period.initial).toISOString();
+        const final = new Date(period.final).toISOString();
+        setServicesProvided((await getServicesProvidedByPeriod(initial, final))?.data);
+      }
+    } catch (error) {
+      console.error(error);
     }
+   
   }
 
-  async function callModal(id) {
-    setServiceProvided((await getServiceProvided(id)).data);
-    setModalShow(true);
+  async function callModal(id, numberInstallment) {
+    try {
+      const serviceProvided = (await getServiceProvided(id)).data;
+      const { installmentsServiceProvided: [installment] } = serviceProvided;
+      setServiceProvided({
+        ...serviceProvided,
+        installment,
+        numberInstallment
+      });
+      setModalShow(true);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 
@@ -124,7 +147,7 @@ export default function Home() {
           </Button>
           <Button
             onClick={ () => navigate('/register') }
-            variant="dark"
+            variant="primary"
           >
             Adicionar
           </Button>
@@ -145,8 +168,9 @@ export default function Home() {
         <Modal.Body className={ style.container__modalBody }>
           <h4>{serviceProvided.client?.name}</h4>
           <p> Serviço: {serviceProvided.service?.name}</p>
-          <p> Valor: {configPrice(serviceProvided.service?.price) }</p>
-          <p> Parcelas: {`${serviceProvided.installmentsPaid}/${serviceProvided.installmentsContracted}`}</p>
+          <p> Valor da parcela: {configPrice(serviceProvided.installment?.priceInstallment) }</p>
+          <p> Parcelas: {`${serviceProvided.numberInstallment}/${serviceProvided.installmentsContracted}`}</p>
+          <p> Valor total: {configPrice(serviceProvided.service?.price) }</p>
           {serviceProvided.obs && <p>Obs: {serviceProvided.obs}</p>}
         </Modal.Body>
         <Modal.Footer>

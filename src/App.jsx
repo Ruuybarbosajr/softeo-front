@@ -6,6 +6,11 @@ import './App.css';
 import Register from './pages/Register';
 import ProviderNewServiceProvided from '../src/context/ProviderNewServiceProvided';
 import ConfirmNewServiceProvided from './pages/ConfirmNewServiceProvided';
+import CreateClient from './pages/CreateClient';
+import CreateService from './pages/CreateService';
+import Edit from './pages/Edit';
+import EditClient from './pages/EditClient';
+import EditService from './pages/EditService';
 
 function App() {
   return (
@@ -23,6 +28,11 @@ function App() {
               <ConfirmNewServiceProvided />
             </ProviderNewServiceProvided>
           }/>
+          <Route path='/register/client' element={ <CreateClient /> }/>
+          <Route path='/register/service' element={ <CreateService /> }/>
+          <Route path='/edit' element={ <Edit /> }/>
+          <Route path='/edit/client/:id' element={ <EditClient /> }/>
+          <Route path='/edit/service/:id' element={ <EditService /> }/>
         </Routes>
       </BrowserRouter>
     </div>

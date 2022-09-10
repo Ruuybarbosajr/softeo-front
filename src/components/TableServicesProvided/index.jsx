@@ -4,8 +4,11 @@ import Table from 'react-bootstrap/Table';
 import PropTypes from 'prop-types';
 import style from './style.module.css';
 import RowBoardServiceProvided from '../RowBoardServiceProvided';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function TableServicesProvided({ servicesProvided, callModal }) {
+  const installments = servicesProvided.map((service) => service.installmentsServiceProvided).flat();
+
   return (
     <Container>
       <Table hover  className={style.container__table } > 
@@ -17,13 +20,17 @@ export default function TableServicesProvided({ servicesProvided, callModal }) {
           </tr>
         </thead>
         <tbody>
-          {servicesProvided.map((serviceProvided) => (
-            <RowBoardServiceProvided
-              key={serviceProvided.id}
-              serviceProvided={serviceProvided}
-              handleClick={ () => callModal(serviceProvided.id) }
-            />
-          ))}
+          {
+            installments.map((installment) => (
+              <RowBoardServiceProvided
+                key={uuidv4()}
+                serviceProvided={{ 
+                  ...installment
+                }}
+                handleClick={ () => callModal(installment.serviceProvidedId, installment.numberInstallment) }
+              />
+            ))
+          }
         </tbody>
       </Table>
     </Container>

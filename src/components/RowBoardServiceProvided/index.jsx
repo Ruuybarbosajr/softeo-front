@@ -4,27 +4,29 @@ import configPrice from '../../Helpers/configPrice';
 import PropTypes from 'prop-types';
 import style from './style.module.css';
 
-export default function RowBoardServiceProvided({ serviceProvided, handleClick }) {
+export default function RowBoardServiceProvided({ serviceProvided: { serviceProvided, priceInstallment }, handleClick }) {
   return (
     <tr
       className={style.container__tr} 
       onClick={ handleClick }>
       <td>{configName(serviceProvided.client.name)}</td>
       <td>{serviceProvided.service.name}</td>
-      <td>{configPrice(serviceProvided.service.price)}</td>
+      <td>{configPrice(priceInstallment)}</td>
     </tr>
   );
 }
 
 RowBoardServiceProvided.propTypes = {
   serviceProvided: PropTypes.shape({
-    client: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    service: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      price: PropTypes.number.isRequired
-    }).isRequired,
+    priceInstallment: PropTypes.number.isRequired,
+    serviceProvided: PropTypes.shape({
+      client: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+      service: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }).isRequired,
+    }),
   }),
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
 };

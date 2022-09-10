@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Container } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import configPrice from '../../Helpers/configPrice';
 import style from './style.module.css';
 
 export default function TotalPrice({ servicesProvided }) {
+  const installments = servicesProvided.map((serviceProvided) => 
+    serviceProvided.installmentsServiceProvided).flat();
+
+  const price = useMemo(() => {
+    return installments.reduce((acc, { priceInstallment }) => 
+      acc + priceInstallment ,0);
+  }, [servicesProvided]);
+
   return (
     <Container className={style.container__price} >
-      <p>Valor total: {configPrice(servicesProvided.reduce((acc, { service }) => acc + service.price ,0)) }</p>
+      <p>Valor total: {configPrice(price) }</p>
     </Container>
   );
 }
