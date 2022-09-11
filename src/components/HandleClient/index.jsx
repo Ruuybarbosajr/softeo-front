@@ -29,9 +29,13 @@ export default function HandleClient({ editClient, config }) {
     const schemaVerified = await schemaClient({ email, name, tel });
     const isValidSubmit = verifyInputs(schemaVerified);
     if (isValidSubmit) {
-      await config.callback({ email, name, tel });
-      navigate(config.path);
-    } setValidated(schemaVerified);
+      try {
+        await config.callback({ email, name, tel });
+        navigate(config.path);
+      } catch (error) {
+        console.error(error);
+      }
+    } else setValidated(schemaVerified);
   }
 
   async function destroyClient() {

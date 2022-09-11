@@ -1,9 +1,7 @@
-import axios from 'axios';
+import fetch from '.';
 
-export default async (id) => axios({
-  baseURL: `http://localhost:3001/service-provided/${id}`,
+export default async (id) => fetch.get(`/service-provided/${id}`, {
   headers: {
-    authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVyaWNhIiwiaWQiOiJlMmEzZDhhZS04MWRmLTQ2MDAtYjRkMi01ZDBmYzg4NjdlMGIiLCJpYXQiOjE2NjI1NjYzMzN9.n9K1xsANLNpsr-NPf7TeAU3Hcv7S-sBAy01fD7UFO9A',
-  },
-  method: 'GET',
+    authorization: localStorage.getItem('token')
+  }
 });

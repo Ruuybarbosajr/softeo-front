@@ -29,9 +29,13 @@ export default function HandleService({ editService, config }) {
     const schemaVerified = await schemaService({ name, price, maxInstallments });
     const isValidSubmit = verifyInputs(schemaVerified);
     if (isValidSubmit) {
-      await config.callback({ name, price, maxInstallments });
-      navigate(config.path);
-    } setValidated(schemaVerified);
+      try {
+        await config.callback({ name, price, maxInstallments });
+        navigate(config.path);
+      } catch (error) {
+        console.error(error);
+      }
+    } else setValidated(schemaVerified);
   }
 
   async function destroyService() {
