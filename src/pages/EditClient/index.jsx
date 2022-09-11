@@ -14,13 +14,21 @@ export default function EditClient() {
 
   useEffect(() => {
     (async () => {
-      setClient((await getOneClient(id)).data);
+      try {
+        setClient((await getOneClient(id)).data);
+      } catch (error) {
+        console.error(error);
+      }
     })();
   }, []);
 
   async function putClientWithId(data) {
-    await putClient(data, id);
-    navigate('/edit');
+    try {
+      await putClient(data, id);
+      navigate('/edit');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

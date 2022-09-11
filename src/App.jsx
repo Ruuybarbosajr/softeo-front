@@ -11,28 +11,59 @@ import CreateService from './pages/CreateService';
 import Edit from './pages/Edit';
 import EditClient from './pages/EditClient';
 import EditService from './pages/EditService';
+import Login from './pages/Login';
+import AuthToken from './components/AuthToken';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/home" element={ <Home />}/>
+          <Route path="/" element={ <Login />}/>
+          <Route path="/home" element={ 
+            <AuthToken>
+              <Home />
+            </AuthToken>
+          }/>
           <Route path="/register" element={ 
-            <ProviderNewServiceProvided>
-              <Register />
-            </ProviderNewServiceProvided>
+            <AuthToken>
+              <ProviderNewServiceProvided>
+                <Register />
+              </ProviderNewServiceProvided>
+            </AuthToken>
           }/>
-          <Route path="/confirm-service" element={ 
-            <ProviderNewServiceProvided>
-              <ConfirmNewServiceProvided />
-            </ProviderNewServiceProvided>
+          <Route path="/confirm-service" element={
+            <AuthToken>
+              <ProviderNewServiceProvided>
+                <ConfirmNewServiceProvided />
+              </ProviderNewServiceProvided>
+            </AuthToken>
           }/>
-          <Route path='/register/client' element={ <CreateClient /> }/>
-          <Route path='/register/service' element={ <CreateService /> }/>
-          <Route path='/edit' element={ <Edit /> }/>
-          <Route path='/edit/client/:id' element={ <EditClient /> }/>
-          <Route path='/edit/service/:id' element={ <EditService /> }/>
+          <Route path='/register/client' element={ 
+            <AuthToken>
+              <CreateClient /> 
+            </AuthToken>
+          }/>
+          <Route path='/register/service' element={ 
+            <AuthToken>
+              <CreateService /> 
+            </AuthToken>
+          }/>
+          <Route path='/edit' element={ 
+            <AuthToken>
+              <Edit />
+            </AuthToken>
+          }/>
+          <Route path='/edit/client/:id' element={
+            <AuthToken>
+              <EditClient />
+            </AuthToken>
+          }/>
+          <Route path='/edit/service/:id' element={
+            <AuthToken>
+              <EditService />
+            </AuthToken> 
+          }/>
         </Routes>
       </BrowserRouter>
     </div>

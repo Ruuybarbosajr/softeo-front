@@ -1,13 +1,20 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
     ],
     "overrides": [
+      {
+        "files": [
+            "*.jsx",
+            "*.js"
+        ]
+    }
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -21,6 +28,8 @@
             "error",
             2
         ],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
         "linebreak-style": 0,
         "quotes": [
             "error",

@@ -32,8 +32,12 @@ export default function Edit() {
 
   useState(() => {
     (async () => {
-      setClients((await getClients()).data);
-      setServices((await getServices()).data);
+      try {
+        setClients((await getClients()).data);
+        setServices((await getServices()).data);
+      } catch (error) {
+        console.error(error);
+      }
     })();
   }, []);
 
@@ -41,7 +45,7 @@ export default function Edit() {
     <>
       <Header />
       <Container className={ style.container }>
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey="0" alwaysOpen>
           <Accordion.Item eventKey="0">
             <Accordion.Header>Editar cliente</Accordion.Header>
             <Accordion.Body>
