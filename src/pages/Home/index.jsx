@@ -23,7 +23,7 @@ export default function Home() {
   const [inputChecked, setInputChecked] = useState(false);
   const [servicesProvided, setServicesProvided] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingBtn, setLoadingBtn] = useState(false);
+  const [loadingBtn, setLoadingBtn] = useState(true);
   const [month, setMonth] = useState('');
   const [period, setPeriod] = useState({ initial: new Date(), final: new Date() });
   const [modalShow, setModalShow] = useState(false);
