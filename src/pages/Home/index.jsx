@@ -12,15 +12,18 @@ import style from './style.module.css';
 import MyModal from '../../components/Modal';
 import getServicesProvidedByMonth from '../../services/getServicesProvidedByMonth';
 import getServicesProvidedByPeriod from '../../services/getServicesProvidedByPeriod';
-import { Modal, Spinner } from 'react-bootstrap';
+import { Modal, Spinner, Toast } from 'react-bootstrap';
 import configPrice from '../../Helpers/configPrice';
 import getServiceProvided from '../../services/getOneServiceProvided';
 import TotalPrice from '../../components/TotalPrice';
+import Loading from '../../components/Loading';
 
 export default function Home() {
   const navigate = useNavigate();
   const [inputChecked, setInputChecked] = useState(false);
   const [servicesProvided, setServicesProvided] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const [month, setMonth] = useState('');
   const [period, setPeriod] = useState({ initial: new Date(), final: new Date() });
   const [modalShow, setModalShow] = useState(false);
@@ -41,23 +44,29 @@ export default function Home() {
     (async () => {
       try {
         setServicesProvided((await getServicesProvided()).data);
+        setLoading(false);
       } catch (error) {
-        console.error(error);
+        setLoading(false);
+        console.error(error.message);
       }
     })();
   }, []);
 
   async function handleClick() {
+    setLoadingBtn(true);
     try {
       if (!inputChecked) {
         setServicesProvided((await getServicesProvidedByMonth(month))?.data);
+        setLoadingBtn(false);
       } else {
         const initial = new Date(period.initial).toISOString();
         const final = new Date(period.final).toISOString();
         setServicesProvided((await getServicesProvidedByPeriod(initial, final))?.data);
+        setLoadingBtn(false);
       }
     } catch (error) {
-      console.error(error);
+      setLoadingBtn(false);
+      console.error(error.message);
     }
   }
 
@@ -72,7 +81,7 @@ export default function Home() {
       });
       setModalShow(true);
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   }
 
@@ -80,106 +89,137 @@ export default function Home() {
   return (
     <>
       <Header />
-      {!servicesProvided && <Spinner className={style.container__loading} animation="border" />}
-      {servicesProvided && <>
-        <Container fluid="sm">
-          <Form className={ style.container__form }>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Select
-                    disabled={inputChecked}
-                    aria-label="Selecione o mês"
-                    placeholder="Mês"
-                    onChange={ ({ target }) => setMonth(target.value) }
+      {loading ?
+        <Loading /> :
+        <>
+          <Container fluid="sm">
+            <Form className={ style.container__form }>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Select
+                      disabled={inputChecked}
+                      aria-label="Selecione o mês"
+                      placeholder="Mês"
+                      onChange={ ({ target }) => setMonth(target.value) }
+                    >
+                      <option value="">Todos os meses</option>
+                      <option value="0">Janeiro</option>
+                      <option value="1">Fevereiro</option>
+                      <option value="2">Março</option>
+                      <option value="3">Abril</option>
+                      <option value="4">Maio</option>
+                      <option value="5">Junho</option>
+                      <option value="6">Julho</option>
+                      <option value="7">Agosto</option>
+                      <option value="8">Setembro</option>
+                      <option value="9">Outubro</option>
+                      <option value="10">Novembro</option>
+                      <option value="11">Dezembro</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className={ style.container__row }>
+                <Form.Label htmlFor='check'>
+                  <Form.Check
+                    id='check'
+                    checked={inputChecked}
+                    type="checkbox"
+                    onChange={ () => setInputChecked((prev) => !prev) }
+                    label="Selecionar o período"
+                  />
+                </Form.Label>
+                <Col>
+                  <Form.Group className={ style.container__groupData }>
+                    <Form.Label>Início</Form.Label>
+                    <Form.Control
+                      onChange={ ({ target: { value } }) => setPeriod((prev) => ({ ...prev, initial: value })) }
+                      disabled={!inputChecked}
+                      type='date'
+                      label="Início"
+                    />
+                  </Form.Group>
+                  <Form.Group className={ style.container__groupData }>
+                    <Form.Label>Fim</Form.Label>
+                    <Form.Control
+                      onChange={ ({ target: { value } }) => setPeriod((prev) => ({ ...prev, final: value })) }
+                      disabled={!inputChecked}
+                      type='date'
+                      label="Final"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Form.Group className={style.container__buttons}>
+                <Button
+                  onClick={ handleClick }
+                  variant="primary"
+                >
+                  {loadingBtn ?  
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    /> 
+                    : 
+                    'Buscar' }
+                </Button>
+                { servicesProvided?.length ? 
+                  <Button
+                    onClick={ () => navigate('/register') }
+                    variant="primary"  
                   >
-                    <option value="">Todos os meses</option>
-                    <option value="0">Janeiro</option>
-                    <option value="1">Fevereiro</option>
-                    <option value="2">Março</option>
-                    <option value="3">Abril</option>
-                    <option value="4">Maio</option>
-                    <option value="5">Junho</option>
-                    <option value="6">Julho</option>
-                    <option value="7">Agosto</option>
-                    <option value="8">Setembro</option>
-                    <option value="9">Outubro</option>
-                    <option value="10">Novembro</option>
-                    <option value="11">Dezembro</option>
-                  </Form.Select>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className={ style.container__row }>
-              <Form.Label htmlFor='check'>
-                <Form.Check
-                  id='check'
-                  checked={inputChecked}
-                  type="checkbox"
-                  onChange={ () => setInputChecked((prev) => !prev) }
-                  label="Selecionar o período"
-                />
-              </Form.Label>
-              <Col>
-                <Form.Group className={ style.container__groupData }>
-                  <Form.Label>Início</Form.Label>
-                  <Form.Control
-                    onChange={ ({ target: { value } }) => setPeriod((prev) => ({ ...prev, initial: value })) }
-                    disabled={!inputChecked}
-                    type='date'
-                    label="Início"
-                  />
-                </Form.Group>
-                <Form.Group className={ style.container__groupData }>
-                  <Form.Label>Fim</Form.Label>
-                  <Form.Control
-                    onChange={ ({ target: { value } }) => setPeriod((prev) => ({ ...prev, final: value })) }
-                    disabled={!inputChecked}
-                    type='date'
-                    label="Final"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button
-              onClick={ handleClick }
-              variant="primary"
-            >
-            Buscar
-            </Button>
-            <Button
-              onClick={ () => navigate('/register') }
-              variant="primary"
-            >
-            Adicionar
-            </Button>
-          </Form>
-        </Container>
-        <TotalPrice servicesProvided={servicesProvided} />
-        <TableServicesProvided
-          callModal={ callModal }
-          servicesProvided={servicesProvided}/> 
-        <MyModal
-          show={modalShow}
-        >
-          <Modal.Header>
-            <Modal.Title id="contained-modal-title-vcenter">
+                Adicionar serviço
+                  </Button> : null
+                }
+              </Form.Group>
+            </Form>
+          </Container>
+          <TotalPrice servicesProvided={servicesProvided} />
+          { servicesProvided?.length ?
+            <TableServicesProvided
+              callModal={ callModal }
+              servicesProvided={servicesProvided}/> :
+            <Toast className={style.container__toast}>
+              <Toast.Body className={style.container__toast_body}>
+              Você não possui serviço
+              
+              </Toast.Body>
+              <Toast.Body>
+                <Button
+                  onClick={ () => navigate('/register') }
+                  variant="primary"  
+                >
+                Adicionar
+                </Button>
+              </Toast.Body>
+            </Toast>
+          }
+          <MyModal
+            show={modalShow}
+          >
+            <Modal.Header>
+              <Modal.Title id="contained-modal-title-vcenter">
             Serviço prestado
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className={ style.container__modalBody }>
-            <h4>{serviceProvided.client?.name}</h4>
-            <p> Serviço: {serviceProvided.service?.name}</p>
-            <p> Valor da parcela: {configPrice(serviceProvided.installment?.priceInstallment) }</p>
-            <p> Parcelas: {`${serviceProvided.numberInstallment}/${serviceProvided.installmentsContracted}`}</p>
-            <p> Valor total: {configPrice(serviceProvided.service?.price) }</p>
-            {serviceProvided.obs && <p>Obs: {serviceProvided.obs}</p>}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={ () => setModalShow(false) }>Voltar</Button>
-          </Modal.Footer>
-        </MyModal>
-      </>}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className={ style.container__modalBody }>
+              <h4>{serviceProvided.client?.name}</h4>
+              <p> Serviço: {serviceProvided.service?.name}</p>
+              <p> Valor da parcela: {configPrice(serviceProvided.installment?.priceInstallment) }</p>
+              <p> Parcelas: {`${serviceProvided.numberInstallment}/${serviceProvided.installmentsContracted}`}</p>
+              <p> Data: {new Date(serviceProvided.installment.dateInstallment).toLocaleDateString()}</p>
+              <p> Valor total: {configPrice(serviceProvided.service?.price) }</p>
+              {serviceProvided.obs && <p>Obs: {serviceProvided.obs}</p>}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={ () => setModalShow(false) }>Voltar</Button>
+            </Modal.Footer>
+          </MyModal>
+        </>}
     </>
   );
 }

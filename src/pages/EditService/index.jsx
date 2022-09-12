@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import HandleService from '../../components/HandleService';
 import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 import getOneService from '../../services/getOneService';
 import putService from '../../services/putService';
-import style from './style.module.css';
 
 export default function EditService() {
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ export default function EditService() {
           }}
         />
       }
-      {!service && <Spinner className={style.container__loading} animation="border" />}
+      {!service && <Loading />}
     </>
   );
 }

@@ -1,7 +1,3 @@
-/* body {
-  background-color: pink !important;
-} */
-
 .container__loading {
   margin-top: 50%;
 }
@@ -45,3 +41,14 @@
   margin: 0;
 }
 
+.container__buttons { 
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.container__toast {
+  margin: 50px auto;
+}

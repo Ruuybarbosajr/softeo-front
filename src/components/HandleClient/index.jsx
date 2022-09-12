@@ -7,9 +7,11 @@ import MyModal from '../Modal';
 import deleteClient from '../../services/deleteClient';
 import schemaClient from '../../schemas/client';
 import verifyInputs from '../../Helpers/verifyInputs';
+import Loading from '../Loading';
 
 export default function HandleClient({ editClient, config }) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState({
     name: true,
     email: true,
@@ -30,6 +32,7 @@ export default function HandleClient({ editClient, config }) {
     const isValidSubmit = verifyInputs(schemaVerified);
     if (isValidSubmit) {
       try {
+        setLoading(true);
         await config.callback({ email, name, tel });
         navigate(config.path);
       } catch (error) {
@@ -39,110 +42,114 @@ export default function HandleClient({ editClient, config }) {
   }
 
   async function destroyClient() {
+    setLoading(true);
     await deleteClient(editClient.id);
     navigate('/edit');
   }
 
   return (
     <>
-      <Container>
-        <Form noValidate onSubmit={handleSubmit}>
-          <Row>
-            <Form.Group className={ style.container__groupInput }>
-              <Form.Label>Nome</Form.Label>
-              <Form.Control
-                onChange={ ({ target }) => setNewClient((prev) => ({
-                  ...prev,
-                  name: target.value
-                }))}
-                required
-                value={newClient.name}
-                type="text"
-                placeholder="Ex: José da Silva"
-                isInvalid={!validated.name}
-              />
-              <Form.Control.Feedback type="invalid">O Nome deve ter mais de 2 caracteres</Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group className={ style.container__groupInput }>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                onChange={ ({ target }) => setNewClient((prev) => ({
-                  ...prev,
-                  email: target.value
-                }))}
-                required
-                value={newClient.email}
-                disabled={newClient.findByProps}
-                type="email"
-                placeholder="exemplo@email.com"
-                isInvalid={!validated.email}
-              />
-              <Form.Control.Feedback type="invalid">Insira um email válido</Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group className={ style.container__groupInput }>
-              <Form.Label>Telefone</Form.Label>
-              <Form.Control
-                onChange={ ({ target }) => setNewClient((prev) => ({
-                  ...prev,
-                  tel: target.value
-                }))}
-                required
-                type="tel"
-                value={newClient.tel}
-                placeholder="(xx) xxxxx-xxxx"
-                isInvalid={!validated.tel}
-              />
-              <Form.Control.Feedback type="invalid">Insira um telefone válido</Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Form.Group className={ style.container__group }>
-            <Button
-              onClick={ () => navigate(config.path) }
-              variant='danger'
-            >
+      {loading ?
+        <Loading /> :
+        <Container>
+          <Form noValidate onSubmit={handleSubmit}>
+            <Row>
+              <Form.Group className={ style.container__groupInput }>
+                <Form.Label>Nome</Form.Label>
+                <Form.Control
+                  onChange={ ({ target }) => setNewClient((prev) => ({
+                    ...prev,
+                    name: target.value
+                  }))}
+                  required
+                  value={newClient.name}
+                  type="text"
+                  placeholder="Ex: José da Silva"
+                  isInvalid={!validated.name}
+                />
+                <Form.Control.Feedback type="invalid">O Nome deve ter mais de 2 caracteres</Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group className={ style.container__groupInput }>
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  onChange={ ({ target }) => setNewClient((prev) => ({
+                    ...prev,
+                    email: target.value
+                  }))}
+                  required
+                  value={newClient.email}
+                  disabled={newClient.findByProps}
+                  type="email"
+                  placeholder="exemplo@email.com"
+                  isInvalid={!validated.email}
+                />
+                <Form.Control.Feedback type="invalid">Insira um email válido</Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+            <Row>
+              <Form.Group className={ style.container__groupInput }>
+                <Form.Label>Telefone</Form.Label>
+                <Form.Control
+                  onChange={ ({ target }) => setNewClient((prev) => ({
+                    ...prev,
+                    tel: target.value
+                  }))}
+                  required
+                  type="tel"
+                  value={newClient.tel}
+                  placeholder="(xx) xxxxx-xxxx"
+                  isInvalid={!validated.tel}
+                />
+                <Form.Control.Feedback type="invalid">Insira um telefone válido</Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+            <Form.Group className={ style.container__group }>
+              <Button
+                onClick={ () => navigate(config.path) }
+                variant='danger'
+              >
             Cancelar
-            </Button>
-            {newClient.findByProps &&
+              </Button>
+              {newClient.findByProps &&
              <Button
                variant='danger'
                onClick={() => setDestroy(true)}
              >
                 Apagar Cliente
              </Button>
-            }
-            <MyModal
-              show={destroy}
-            >
-              <Modal.Header>
-                <Modal.Title>
+              }
+              <MyModal
+                show={destroy}
+              >
+                <Modal.Header>
+                  <Modal.Title>
                   Tem certeza que deseja apagar?
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Footer>
-                <Button
-                  onClick={ destroyClient }
-                >
+                  </Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                  <Button
+                    onClick={ destroyClient }
+                  >
                   Sim
-                </Button>
-                <Button
-                  onClick={ () => setDestroy(false) }
-                >
+                  </Button>
+                  <Button
+                    onClick={ () => setDestroy(false) }
+                  >
                   Não
-                </Button>
-              </Modal.Footer>
-            </MyModal>
-            <Button
-              type="submit"
-            >
-              {config.title}
-            </Button>
-          </Form.Group>
-        </Form>
-      </Container>
+                  </Button>
+                </Modal.Footer>
+              </MyModal>
+              <Button
+                type="submit"
+              >
+                {config.title}
+              </Button>
+            </Form.Group>
+          </Form>
+        </Container>
+      }
     </>
   );
 }

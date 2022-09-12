@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import HandleClient from '../../components/HandleClient';
 import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 import getOneClient from '../../services/getOneClient';
 import putClient from '../../services/putClient';
-import style from './style.module.css';
 
 export default function EditClient() {
   const navigate = useNavigate();
@@ -47,7 +46,7 @@ export default function EditClient() {
           }}
         />
       }
-      {!client && <Spinner className={style.container__loading} animation="border" />}
+      {!client && <Loading />}
     </>
   );
 }
