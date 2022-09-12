@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import style from './style.module.css';
-import { Button, Container, Form } from 'react-bootstrap';
+import { Button, Container, Form, Spinner } from 'react-bootstrap';
 import verifyInputs from '../../Helpers/verifyInputs';
 import schemaLogin from '../../schemas/login';
 import postLogin from '../../services/postLogin';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const [login, setLogin] = useState({
     username: '',
     password: ''
@@ -23,15 +24,17 @@ export default function Login() {
     const isValidSubmit = verifyInputs(schemaVerified);
     if (isValidSubmit) {
       try {
+        setLoadingBtn(true);
         const { token } = (await postLogin(login)).data;
         localStorage.setItem('token', token);
         navigate('/home');
       } catch (error) {
+        setLoadingBtn(false);
         setValidated({
           username: false,
           password: false
         });
-        console.error(error);
+        console.error(error.message);
       }
     } else setValidated(schemaVerified);
   }
@@ -70,7 +73,16 @@ export default function Login() {
         <Button
           type='submit'
         >
-          Entrar
+          {loadingBtn ?  
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            /> 
+            : 
+            'Entrar' }
         </Button>
       </Form>
     </Container>

@@ -45,8 +45,10 @@ export default function Home() {
       try {
         setServicesProvided((await getServicesProvided()).data);
         setLoading(false);
+        setLoadingBtn(false);
       } catch (error) {
         setLoading(false);
+        setLoadingBtn(false);
         console.error(error.message);
       }
     })();
@@ -84,7 +86,6 @@ export default function Home() {
       console.error(error.message);
     }
   }
-
 
   return (
     <>
