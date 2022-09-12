@@ -1,8 +1,18 @@
 .container__group {
   display: flex;
   flex-wrap: nowrap;
+  justify-content: center;
   gap: 5px;
   padding: 10px;
+}
+
+.container__group select {
+  max-width: 60%;
+}
+
+.select_installments {
+  min-width: 316px !important;
+  max-width: 69.6% !important;
 }
 
 .container {

@@ -24,7 +24,7 @@ export default function Home() {
   const [servicesProvided, setServicesProvided] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingBtn, setLoadingBtn] = useState(true);
-  const [month, setMonth] = useState('');
+  const [month, setMonth] = useState(new Date().getMonth());
   const [period, setPeriod] = useState({ initial: new Date(), final: new Date() });
   const [modalShow, setModalShow] = useState(false);
   const [serviceProvided, setServiceProvided] = useState({
@@ -101,6 +101,7 @@ export default function Home() {
                     <Form.Select
                       disabled={inputChecked}
                       aria-label="Selecione o mês"
+                      value={month}
                       placeholder="Mês"
                       onChange={ ({ target }) => setMonth(target.value) }
                     >

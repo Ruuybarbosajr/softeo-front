@@ -64,6 +64,7 @@ export default function HandleClient({ editClient, config }) {
                   required
                   value={newClient.name}
                   type="text"
+                  maxLength="37"
                   placeholder="Ex: José da Silva"
                   isInvalid={!validated.name}
                 />
@@ -82,6 +83,7 @@ export default function HandleClient({ editClient, config }) {
                   value={newClient.email}
                   disabled={newClient.findByProps}
                   type="email"
+                  maxLength="50"
                   placeholder="exemplo@email.com"
                   isInvalid={!validated.email}
                 />
@@ -98,6 +100,7 @@ export default function HandleClient({ editClient, config }) {
                   }))}
                   required
                   type="tel"
+                  maxLength="11"
                   value={newClient.tel}
                   placeholder="(xx) xxxxx-xxxx"
                   isInvalid={!validated.tel}

@@ -64,6 +64,7 @@ export default function HandleService({ editService, config }) {
                     required
                     value={newService.name}
                     type="text"
+                    maxLength="50"
                     placeholder="Nome"
                     isInvalid={!validated.name}
                   />
@@ -81,6 +82,7 @@ export default function HandleService({ editService, config }) {
                     required
                     value={newService.price}
                     type="number"
+                    min="0"
                     placeholder="Preço"
                     isInvalid={!validated.price}
                   />
@@ -98,6 +100,8 @@ export default function HandleService({ editService, config }) {
                     required
                     value={newService.maxInstallments}
                     type="number"
+                    max="24"
+                    min="0"
                     placeholder="Nº de parcelas"
                     isInvalid={!validated.maxInstallments}
                   />

@@ -92,7 +92,7 @@ export default function Registers() {
                   onClick={ () => navigate('/register/client') }
                   variant="primary"
                 >
-                  Adicionar
+                  Criar Cliente
                 </Button>
               </Form.Group>
             </Col>
@@ -119,7 +119,7 @@ export default function Registers() {
                   onClick={ () => navigate('/register/service') }
                   variant="primary"
                 >
-                  Adicionar
+                  Criar Serviço
                 </Button>
               </Form.Group>
             </Col>
@@ -128,6 +128,7 @@ export default function Registers() {
             <Col>
               <Form.Group className={ style.container__group }>
                 <Form.Select
+                  className={style.select_installments}
                   aria-label="Selecione o cliente"
                   placeholder="Mês"
                   disabled={ !serviceProvidedForConfirmation.service.price }
