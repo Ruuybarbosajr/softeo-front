@@ -13,7 +13,11 @@ export default function EditService() {
 
   useEffect(() => {
     (async () => {
-      setService((await getOneService(id)).data);
+      try {
+        setService((await getOneService(id)).data);
+      } catch (error) {
+        console.log(error.message);
+      }
     })();
   }, []);
 

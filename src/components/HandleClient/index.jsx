@@ -36,7 +36,7 @@ export default function HandleClient({ editClient, config }) {
         await config.callback({ email, name, tel });
         navigate(config.path);
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     } else setValidated(schemaVerified);
   }

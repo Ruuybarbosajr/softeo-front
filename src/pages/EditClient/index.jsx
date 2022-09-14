@@ -16,7 +16,7 @@ export default function EditClient() {
       try {
         setClient((await getOneClient(id)).data);
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     })();
   }, []);
@@ -26,7 +26,7 @@ export default function EditClient() {
       await putClient(data, id);
       navigate('/edit');
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
     }
   }
 

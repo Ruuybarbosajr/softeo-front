@@ -5,12 +5,16 @@ import configPrice from '../../Helpers/configPrice';
 import style from './style.module.css';
 
 export default function TotalPrice({ servicesProvided }) {
-  const installments = servicesProvided.map((serviceProvided) => 
-    serviceProvided.installmentsServiceProvided).flat();
 
   const price = useMemo(() => {
-    return installments.reduce((acc, { priceInstallment }) => 
-      acc + priceInstallment ,0);
+    if (servicesProvided?.length) {
+      const installments = servicesProvided.map((serviceProvided) => 
+        serviceProvided.installmentsServiceProvided).flat();
+    
+      return installments.reduce((acc, { priceInstallment }) => 
+        acc + priceInstallment ,0);
+    }
+    return 0;
   }, [servicesProvided]);
 
   return (

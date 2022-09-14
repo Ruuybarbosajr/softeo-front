@@ -36,7 +36,7 @@ export default function Edit() {
         setClients((await getClients()).data);
         setServices((await getServices()).data);
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     })();
   }, []);

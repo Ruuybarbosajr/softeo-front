@@ -36,7 +36,7 @@ export default function HandleService({ editService, config }) {
         await config.callback({ name, price, maxInstallments });
         navigate(config.path);
       } catch (error) {
-        console.error(error);
+        console.error(error.message);
       }
     } else setValidated(schemaVerified);
   }

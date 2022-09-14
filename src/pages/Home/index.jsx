@@ -188,7 +188,6 @@ export default function Home() {
             <Toast className={style.container__toast}>
               <Toast.Body className={style.container__toast_body}>
               Você não possui serviço
-              
               </Toast.Body>
               <Toast.Body>
                 <Button
