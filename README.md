@@ -14,3 +14,6 @@
 * [Yup](https://www.npmjs.com/package/yup)
 * [Axios](https://axios-http.com/docs/intro)
 * [React Bootstrap](https://react-bootstrap.github.io/)
+
+## Link do app:
+- softeo-tec-front.herokuapp.com/
