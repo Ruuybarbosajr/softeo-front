@@ -16,4 +16,4 @@
 * [React Bootstrap](https://react-bootstrap.github.io/)
 
 ## Link do app:
-- softeo-tec-front.herokuapp.com/
+- [App](softeo-tec-front.herokuapp.com/)
